@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="Reply_Seq_SAP_DMS_3" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property expression="json-eval($)" name="Reply Sequence Message"/>
+    </log>
+    <drop/>
+</sequence>

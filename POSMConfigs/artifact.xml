@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="POSM_API" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/POSM_API.xml</file>
+    </artifact>
+    <artifact name="POSM_API_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/POSM_API_swagger.yaml</file>
+    </artifact>
+    <artifact name="POSM_API_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/POSM_API_metadata.yaml</file>
+    </artifact>
+    <artifact name="POSM_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/POSM_Seq.xml</file>
+    </artifact>
+    <artifact name="POSM_GuaranteedDelivery_API" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/POSM_GuaranteedDelivery_API.xml</file>
+    </artifact>
+    <artifact name="POSM_GuaranteedDelivery_API_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/POSM_GuaranteedDelivery_API_swagger.yaml</file>
+    </artifact>
+    <artifact name="POSM_GuaranteedDelivery_API_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/POSM_GuaranteedDelivery_API_metadata.yaml</file>
+    </artifact>
+    <artifact name="DMS_AuthHeader_Seq_SAP_DMS_3" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_AuthHeader_Seq_SAP_DMS_3.xml</file>
+    </artifact>
+    <artifact name="DMS_Token_Generate_Seq_SAP_DMS_3" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_Token_Generate_Seq_SAP_DMS_3.xml</file>
+    </artifact>
+    <artifact name="EmailSendSeq_SAP_DMS_3" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/EmailSendSeq_SAP_DMS_3.xml</file>
+    </artifact>
+    <artifact name="Reply_Seq_SAP_DMS_3" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Reply_Seq_SAP_DMS_3.xml</file>
+    </artifact>
+    <artifact name="SAP_Auth_Seq_SAP_DMS_3" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/SAP_Auth_Seq_SAP_DMS_3.xml</file>
+    </artifact>
+    <artifact name="POSM_Data_Mapping_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/POSM_Data_Mapping_Seq.xml</file>
+    </artifact>
+    <artifact name="PosmFailedMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/PosmFailedMessageStore.xml</file>
+    </artifact>
+    <artifact name="PosmMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/PosmMessageStore.xml</file>
+    </artifact>
+    <artifact name="PosmMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/PosmMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="POSM_GuaranteedDelivery_EP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/POSM_GuaranteedDelivery_EP.xml</file>
+    </artifact>
+    <artifact name="POSM_Endpoint" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/POSM_Endpoint.xml</file>
+    </artifact>
+    <artifact name="PosmFailedMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/PosmFailedMessageProcessor.xml</file>
+    </artifact>
+</artifacts>

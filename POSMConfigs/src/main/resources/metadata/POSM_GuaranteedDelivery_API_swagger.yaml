@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: POSM_GuaranteedDelivery_API
+  description: API Definition of POSM_GuaranteedDelivery_API
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/posm_guaranteedDelivery
+paths:
+  /:
+    post:
+      responses:
+        default:
+          description: Default response

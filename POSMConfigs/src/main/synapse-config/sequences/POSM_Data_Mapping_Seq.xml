@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="POSM_Data_Mapping_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <script language="js"><![CDATA[payload = mc.getPayloadJSON();
+		function FormatDate(dateString) {
+		    var timestamp = parseInt(
+		        dateString.replace("/Date(", "").replace(")/", ""),
+		        10
+		    );
+		
+		    var date = new Date(timestamp);
+		
+		    var year = date.getFullYear();
+		    var month = date.getMonth() + 1;
+		    var day = date.getDate();
+		
+		    var monthStr = month < 10 ? "0" + month : "" + month;
+		    var dayStr = day < 10 ? "0" + day : "" + day;
+		
+		    return year + "-" + monthStr + "-" + dayStr;
+		}
+		var datetime = new Date();
+		var output = payload.d.results;
+		
+		var theYear = datetime.getFullYear().toString();
+		var theMonth = (datetime.getMonth() + 1).toString();
+		var theDay = datetime.getDate().toString();
+		if (theMonth.length === 1) {
+		    theMonth = "0" + theMonth;
+		}
+		if (theDay.length === 1) {
+		    theDay = "0" + theDay;
+		}
+		var formattedDate = theYear + "-" + theMonth + "-" + theDay;
+		
+		var receiptFormattedDate = FormatDate(output[0]["GoodsReceivedDate02"]);
+		
+		if (output != null && output.length > 0) {
+		    BranchList = mc.getProperty('BranchList');
+		    BranchList = JSON.parse(BranchList);
+		    BranchList = BranchList.Branch;
+		    var branchCode = output[0]["CostCenter01"];
+		    var tenantId = "";
+		    var userId = "";
+		    var vendorId = mc.getProperty('vendorId');
+		    BranchList.forEach(function (value, index, array) {
+		        if (value.Branch_code == branchCode) {
+		            tenantId = value.TenantId;
+		            userId = value.UserID
+		        }
+		    });
+		
+		    FacilityList = mc.getProperty('FacilityList');
+		    FacilityList = JSON.parse(FacilityList);
+		    FacilityList = FacilityList.Facility;
+		    facilityCode = output[0]["CostCenter02"];
+		    var facilityId = "";
+		    FacilityList.forEach(function (value, index, array) {
+		        if (value.branch_code == facilityCode) {
+		            facilityId = value.POSM_Facility;
+		        }
+		    });
+		    var PONumber = "";
+		    if (output[0]["CostCenter03"] == "5805") {
+		        PONumber = mc.getProperty('PO_6L2');
+		    }
+		    else {
+		        PONumber = mc.getProperty('PO_6L9');
+		    }
+		
+		    var requestJson = {
+		        "routeName": "POSM",
+		        "next_run_time": mc.getProperty('next_run_time'),
+		        "schedulerId": mc.getProperty('Message_ID'),
+		        "GRNs": {
+		            "GRN": {
+		                "TenantId": tenantId,
+		                "userLoginId": userId,
+		                "DeliveryNoteInvoiceASN": {},
+		                "GRNTypeId": "INCOMING_SHIPMENT",
+		                "FacilityId": facilityId,
+		                "GRNNumber": output[0]["MaterialDocumentNumber"],
+		                "items": {},
+		                "PONumber": PONumber,
+		                "ReceivedDate": receiptFormattedDate,
+		                "ReceiverName": "",
+		                "Status": "GRN_SUBMITTED",
+		                "VendorId": mc.getProperty('vendorId'),
+		                "GRNAttribute1": output[0]["PurchaseOrderNumber"],
+		                "GRNAttribute2": "",
+		                "GRNAttribute3": "",
+		                "GRNAttribute4": "",
+		                "isSavedFromKB": "false"
+		            }
+		        }
+		    };
+		
+		    if (output.length === 1) {
+		        var item = output[0];
+		        productList = mc.getProperty('ProductList');
+		        productList = JSON.parse(productList);
+		        productList = productList.Product;
+		        productCode = item["MaterialNumber"];
+		        productId = "";
+		        productList.forEach(function (value, index, array) {
+		            if (value.productCode == productCode) {
+		                productId = value.productId;
+		            }
+		        });
+		
+		        var obj = {
+		            "OrderItem": {
+		                "BatchNumber": "POSM",
+		                "BatchQtyReceived": item["ReceivedQuantity"],
+		                "ExpiryDate": "2099-12-31",
+		                "MfgDate": FormatDate(GoodsReceivedDate01),
+		                "orderQty": item["POQuantity"],
+		                "orderedUom": "",
+		                "productId": productId,
+		                "uomId": "INF_PROD_PIECE",
+		                "TaxApplied": "0.00",
+		                "LandingCost": item["LandedCost"],
+		                "Mrp": item["MRP"],
+		                "price": item["Price"],
+		                "reasonCode": {}
+		            }
+		        };
+		        requestJson.GRNs.GRN.items = obj;
+		    } else {
+		        requestJson.GRNs.GRN.items.OrderItem = [];
+		        for (var i in output) {
+		            var item = output[i];
+		            productList = mc.getProperty('ProductList');
+		            productList = JSON.parse(productList);
+		            productList = productList.Product;
+		            productCode = item["MaterialNumber"];
+		            productId = "";
+		            productList.forEach(function (value, index, array) {
+		                if (value.productCode == productCode) {
+		                    productId = value.productId;
+		                }
+		            });
+		            var obj = {
+		                "BatchNumber": "POSM",
+		                "BatchQtyReceived": item["ReceivedQuantity"],
+		                "ExpiryDate": "2099-12-31",
+		                "MfgDate": FormatDate(GoodsReceivedDate01),
+		                "orderQty": item["POQuantity"],
+		                "orderedUom": "",
+		                "productId": productId,
+		                "uomId": "INF_PROD_PIECE",
+		                "TaxApplied": "0.00",
+		                "LandingCost": item["LandedCost"],
+		                "Mrp": item["MRP"],
+		                "price": item["Price"],
+		                "reasonCode": {}
+		            };
+		            requestJson.GRNs.GRN.items.OrderItem.push(obj);
+		        }
+		    }
+		    mc.setPayloadJSON(requestJson);
+		} else {
+		    mc.setPayloadJSON({});
+		}]]></script>
+</sequence>

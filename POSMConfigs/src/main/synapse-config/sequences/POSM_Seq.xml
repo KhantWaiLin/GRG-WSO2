@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="POSM_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="regUrl" scope="default" type="STRING" value="conf:/resources/ResourceData.xml"/>
+        <property expression="get-property('registry', $ctx:regUrl)" name="Data" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="$ctx:Data//ProductList" name="ProductList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//FacilityList" name="FacilityList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//BranchList" name="BranchList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//facility_id" name="facility_id" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//vendorId" name="vendorId" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//POSM_Run_Time_Interval" name="POSM_Run_Time_Interval" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//PO_6L2" name="PO_6L2" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//PO_6L9" name="PO_6L9" scope="default" type="STRING"/>
+    </propertyGroup>
+    <script language="js"><![CDATA[var min = mc.getProperty('POSM_Run_Time_Interval');
+			var todayDate = new Date();
+         	var next_run_time = new Date(todayDate.getTime() + min * 60000);
+         	mc.setProperty('next_run_time',next_run_time.toLocaleString());]]></script>
+    <sequence key="SAP_Auth_Seq_SAP_DMS_3"/>
+    <property name="URL" scope="default" type="STRING" value="https://devsapapi.grandroyal-group.com/sap/opu/odata/SAP/ZOD_SDXXI0070_SRV/PosmDataSet"/>
+    <property expression="fn:substring-after(get-property('MessageID'), 'urn:uuid:')" name="Message_ID" scope="default" type="STRING"/>
+    <log level="custom">
+        <property expression="get-property('Message_ID')" name="Message ID"/>
+    </log>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+    <dbreport>
+        <connection>
+            <pool>
+                <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_message_store;encrypt=true;trustServerCertificate=true;</url>
+                <user>sa</user>
+                <password>B!m5upp0rt</password>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO wso2_Scheduler_RunTime Values (?,?,?,?,?,?,?)]]></sql>
+            <parameter expression="get-property('Message_ID')" type="VARCHAR"/>
+            <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="JDE_DMS"/>
+            <parameter expression="get-property('URL')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="POSM_GRN_Integration"/>
+            <parameter type="VARCHAR" value="-"/>
+            <parameter expression="get-property('next_run_time')" type="VARCHAR"/>
+        </statement>
+    </dbreport>
+    <payloadFactory media-type="json">
+        <format>{}</format>
+        <args/>
+    </payloadFactory>
+    <call>
+        <endpoint>
+            <http method="post" uri-template="https://devsapapi.grandroyal-group.com/sap/opu/odata/SAP/ZOD_SDXXI0070_SRV/PosmDataSet">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </http>
+        </endpoint>
+    </call>
+    <property name="API_Name" scope="default" type="STRING" value="POSM_GRN_Integration API"/>
+    <property name="API" scope="default" type="STRING" value="JDE"/>
+    <property expression="$axis2:HTTP_SC" name="Status" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="$ctx:ERROR_CODE" name="ErrorCode" scope="default" type="STRING"/>
+    <filter xpath="$ctx:Status != 200">
+        <then>
+            <property expression="get-property('ERROR_MESSAGE')" name="message" scope="default" type="STRING"/>
+            <sequence key="EmailSeq"/>
+        </then>
+        <else/>
+    </filter>
+    <log level="custom">
+        <property expression="get-property('URL')" name="URL_Route"/>
+        <property expression="json-eval($)" name="POSM_GRN_Integration_Response"/>
+    </log>
+    <property expression="json-eval($.POSM_Receipt_Integration_Repeating)" name="POSM_Receipt_Integration_Repeating" scope="default" type="STRING"/>
+    <filter regex="true" source="boolean(get-property('POSM_Receipt_Integration_Repeating'))">
+        <then>
+            <iterate expression="json-eval($.POSM_Receipt_Integration_Repeating)" sequential="true">
+                <target>
+                    <sequence>
+                        <sequence key="POSM_Data_Mapping_Seq"/>
+                        <filter regex=".+" source="get-property('ERROR_MAPPING')">
+                            <then>
+                                <log level="custom">
+                                    <property expression="get-property('ERROR_MAPPING')" name="JavaScriptError"/>
+                                </log>
+                            </then>
+                            <else>
+                                <log level="custom">
+                                    <property expression="json-eval($)" name="Message Will store"/>
+                                </log>
+                                <store messageStore="PosmMessageStore"/>
+                                <log level="custom">
+                                    <property expression="json-eval($)" name="Message To store"/>
+                                </log>
+                            </else>
+                        </filter>
+                    </sequence>
+                </target>
+            </iterate>
+        </then>
+        <else/>
+    </filter>
+</sequence>

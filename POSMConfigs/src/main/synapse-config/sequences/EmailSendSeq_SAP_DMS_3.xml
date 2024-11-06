@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="EmailSendSeq_SAP_DMS_3" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="regUrlForGmail" scope="default" type="STRING" value="conf:/resources/GmailConnector.xml"/>
+        <property expression="get-property('registry', $ctx:regUrlForGmail)" name="GmailData" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="$ctx:GmailData//UserId" name="UserId" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//Client_Id" name="Client_Id" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//Client_Secret" name="Client_Secret" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//RedirectUrl" name="RedirectUrl" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//AccessToken" name="AccessToken" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//RefreshToken" name="RefreshToken" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//To" name="To" scope="default" type="STRING"/>
+        <property expression="$ctx:GmailData//CC" name="CC" scope="default" type="STRING"/>
+    </propertyGroup>
+    <property expression="get-property('API_Name')" name="API_name" scope="default" type="STRING"/>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+    <property expression="get-property('Status')" name="API_Status" scope="default" type="STRING"/>
+    <property expression="get-property('message')" name="ErrorMessage" scope="default" type="STRING"/>
+    <property expression="get-property('API')" name="Header_API" scope="default" type="STRING"/>
+    <property expression="concat('An error occured while calling ',$ctx:Header_API)" name="error_message" scope="default" type="STRING"/>
+    <property expression="get-property('Payload')" name="Payload" scope="default" type="STRING"/>
+    <property expression="get-property('URL')" name="url" scope="default" type="STRING"/>
+    <gmail.init>
+        <userId>{$ctx:UserId}</userId>
+        <accessToken>{$ctx:AccessToken}</accessToken>
+        <apiUrl>{$ctx:RedirectUrl}</apiUrl>
+        <clientId>{$ctx:Client_Id}</clientId>
+        <clientSecret>{$ctx:Client_Secret}</clientSecret>
+        <refreshToken>{$ctx:RefreshToken}</refreshToken>
+    </gmail.init>
+    <gmail.getAccessTokenFromRefreshToken>
+        <clientId>{$ctx:Client_Id}</clientId>
+        <clientSecret>{$ctx:Client_Secret}</clientSecret>
+        <refreshToken>{$ctx:RefreshToken}</refreshToken>
+    </gmail.getAccessTokenFromRefreshToken>
+    <gmail.sendMail>
+        <to>{$ctx:To}</to>
+        <subject>Response Error Alert</subject>
+        <from>{$ctx:UserId}</from>
+        <messageBody>{concat('
+            API Name : ',$ctx:API_name,'
+            Time : ', $ctx:currentDate,'
+            Status : ', $ctx:API_Status,'
+            Error Message : ',$ctx:error_message,'
+            Url : ',$ctx:url,'
+            Payload : ',$ctx:Payload,)}</messageBody>
+        <cc>{$ctx:CC}</cc>
+    </gmail.sendMail>
+</sequence>
