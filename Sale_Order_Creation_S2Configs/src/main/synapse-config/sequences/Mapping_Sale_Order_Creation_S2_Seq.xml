@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="Mapping_Sale_Order_Creation_S2_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property name="Name" scope="default" type="STRING" value="Purchase_Order_Creation_S1"/>
+    <property expression="concat(get-property('uri.var.DMS_URL'),'/purchaseOrder/list/',get-property('uri.var.TenantId'),'/',get-property('uri.var.UserId'),'/',get-property('uri.var.CurrentTimeStamp'),'/null/null/')" name="URL" scope="default" type="STRING"/>
+    <property expression="fn:substring-after(get-property('MessageID'), 'urn:uuid:')" name="Message_ID" scope="default" type="STRING"/>
+    <log level="custom">
+        <property expression="get-property('Message_ID')" name="Message ID"/>
+    </log>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+    <dbreport>
+        <connection>
+            <pool>
+                <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_dms_sap_store;encrypt=true;trustServerCertificate=true;</url>
+                <user>sa</user>
+                <password>B!m5upp0rt</password>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO wso2_Scheduler_RunTime Values (?,?,?,?,?,?,?)]]></sql>
+            <parameter expression="get-property('Message_ID')" type="VARCHAR"/>
+            <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="DMS_SAP"/>
+            <parameter expression="get-property('URL')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="Purchase_Order_Creation_S1"/>
+            <parameter expression="get-property('uri.var.TenantId')" type="VARCHAR"/>
+            <parameter expression="get-property('next_run_time')" type="VARCHAR"/>
+        </statement>
+    </dbreport>
+    <sequence key="DMS_CallSaleOrderAPI_Seq"/>
+    <log level="custom">
+        <property expression="get-property('URL')" name="URL_Route"/>
+        <property expression="$ctx:DataRecords" name="Purchase_Order"/>
+    </log>
+    <switch source="get-property('Status')">
+        <case regex="401">
+            <log level="custom">
+                <property name="switch Log" value="401 case"/>
+            </log>
+            <sequence key="DMS_Token_Generate_Seq"/>
+            <sequence key="DMS_CallSaleOrderAPI_Seq"/>
+        </case>
+        <case regex="403">
+            <log level="custom">
+                <property name="switch Log" value="403 case"/>
+            </log>
+            <sequence key="DMS_Token_Generate_Seq"/>
+            <sequence key="DMS_CallSaleOrderAPI_Seq"/>
+        </case>
+        <default>
+            <log level="custom">
+                <property name="switch Log" value="Not Expired case"/>
+            </log>
+        </default>
+    </switch>
+    <payloadFactory media-type="json">
+        <format>
+			$1
+		</format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:DataRecords"/>
+        </args>
+    </payloadFactory>
+    <property expression="json-eval($)" name="transformedPayload" scope="default" type="STRING"/>
+    <log level="custom">
+        <property expression="$ctx:transformedPayload" name="Stored Payload"/>
+        <property expression="json-eval($.PurchaseOrder)" name="transformedPayload"/>
+    </log>
+    <iterate expression="json-eval($.PurchaseOrder)" id="jsonIterator">
+        <target>
+            <sequence>
+                <propertyGroup>
+                    <property expression="json-eval($.status)" name="status" scope="default" type="STRING"/>
+                    <property expression="json-eval($.branchId)" name="branchId" scope="default" type="STRING"/>
+                    <property expression="json-eval($.branchName)" name="branchName" scope="default" type="STRING"/>
+                    <property expression="json-eval($.deliveryDate)" name="deliveryDate" scope="default" type="STRING"/>
+                    <property expression="json-eval($.orderId)" name="orderId" scope="default" type="STRING"/>
+                    <property expression="json-eval($.orderType)" name="orderType" scope="default" type="STRING"/>
+                    <property expression="json-eval($.poType)" name="poType" scope="default" type="STRING"/>
+                    <property expression="json-eval($.poComments)" name="poComments" scope="default" type="STRING"/>
+                </propertyGroup>
+                <filter regex="INFY_PO_REGULAR" source="get-property('poType')">
+                    <then>
+                        <filter regex="INFY_PO_SUBMIT" source="get-property('status')">
+                            <then>
+                                <script language="js"><![CDATA[var payload = mc.getPayloadJSON();
+                                function padZero(value, length) {
+                                    value = value.toString();
+                                    while (value.length < length) {
+                                        value = "0" + value;
+                                    }
+                                    return value;
+                                }
+
+                                function FormatDate(data) {
+                                    var date = new Date(Number(data));
+
+                                    var year = date.getFullYear();
+                                    var month = padZero(date.getMonth() + 1, 2);
+                                    var day = padZero(date.getDate(), 2);
+                                    var hours = padZero(date.getHours(), 2);
+                                    var minutes = padZero(date.getMinutes(), 2);
+                                    var seconds = padZero(date.getSeconds(), 2);
+
+                                    return (
+                                        year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds
+                                    );
+                                }
+								var orderItems = payload.items.OrderItem;
+								var order = new Object();
+								order.routeName = 'Purchase_Order_Creation_S1';
+								order.next_run_time = mc.getProperty('next_run_time');
+								order.schedulerId = mc.getProperty('Message_ID');
+								
+								var payloadCopy = {
+								   items: payload.items,
+								   orderorderType: payload.orderType,
+								   orderId: payload.orderId,
+								}
+								order.originalPayload = payloadCopy;
+								
+								TenantId = mc.getProperty('uri.var.TenantId');
+								BranchList = mc.getProperty('BranchList');
+								BranchList = JSON.parse(BranchList);
+								BranchList = BranchList.Branch;
+								branchId = mc.getProperty('branchId').toString().trim();
+								branchCode = "";
+								sapCode = "";
+								BranchList.forEach(function (value, index, array) {
+									if (value.TenantId == TenantId && value.InternalID == branchId) {
+										branchCode = value.Branch_code;
+										sapCode = value.SAP_Code;
+									}
+								});
+								order.SalesOffice = sapCode.toString();
+								order.CustomerNumber = branchCode.toString();
+								order.POComments = mc.getProperty('poComments');
+								order.SaleOrderItem = new Array;
+								if (Array.isArray(orderItems)) {
+								for (j = 0; j < orderItems.length; j++) {
+										data_row = orderItems[j];
+										orderItem = new Object();
+										orderItem.DocumentItem = data_row.orderItemSeqId;
+										orderItem.SalesQuantity = data_row.orderQty;
+
+										productList = mc.getProperty('ProductList');
+										productList = JSON.parse(productList);
+										productList = productList.Product;
+										productId = data_row.productId;
+										productCode = "";
+										productList.forEach(function (value, index, array) {
+											if (value.productId == productId) {
+												productCode = value.productCode;
+											}
+										});
+										orderItem.MaterialNumber = productCode;
+
+										var deliveryDate = mc.getProperty('deliveryDate');
+										orderItem.RequestedDeliveryDate = FormatDate(Number(deliveryDate) - 60 * 60000);
+										orderItem.CustomerRefItem = mc.getProperty('orderId');
+										orderItem.SalesRepresentative = "";
+										if (data_row.uomId == "INF_PROD_BOTTLE") {
+											orderItem.Uom = "BT";
+										}
+										else if (data_row.uomId == "INF_PROD_CAS") {
+											orderItem.Uom = "CA";
+										}
+										order.SaleOrderItem[j] = orderItem;
+									}
+								}
+                                else {
+                                    data_row = orderItems;
+                                    orderItem = new Object();
+                                    orderItem.DocumentItem = data_row.orderItemSeqId;
+                                    orderItem.SalesQuantity = data_row.orderQty;
+
+                                    productList = mc.getProperty('ProductList');
+                                    productList = JSON.parse(productList);
+                                    productList = productList.Product;
+                                    productId = data_row.productId;
+                                    productCode = "";
+                                    productList.forEach(function (value, index, array) {
+                                        if (value.productId == productId) {
+                                            productCode = value.productCode;
+                                        }
+                                    });
+                                    orderItem.MaterialNumber = productCode;
+
+                                    var deliveryDate = mc.getProperty('deliveryDate');
+                                    orderItem.RequestedDeliveryDate = FormatDate(Number(deliveryDate) - 60 * 60000);
+                                    orderItem.CustomerRefItem = mc.getProperty('orderId');
+                                    orderItem.SalesRepresentative = "";
+                                    if (data_row.uomId == "INF_PROD_BOTTLE") {
+                                        orderItem.Uom = "BT";
+                                    }
+                                    else if (data_row.uomId == "INF_PROD_CAS") {
+                                        orderItem.Uom = "CA";
+                                    }
+                                    order.SaleOrderItem[0] = orderItem;
+                                }
+                                order.CustomerRefHeader = mc.getProperty('orderId');
+                                order.ReturnMessage = new Array();
+								mc.setPayloadJSON(order);]]></script>
+                                <store description="JDBC message store" messageStore="SaleOrderCreationMessageStore"/>
+                                <log level="custom">
+                                    <property expression="json-eval($)" name="Message to sotre"/>
+                                </log>
+                            </then>
+                            <else/>
+                        </filter>
+                    </then>
+                    <else/>
+                </filter>
+            </sequence>
+        </target>
+    </iterate>
+</sequence>

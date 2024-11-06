@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sale_order_creation_guaranteedDelivery" name="Sale_Order_Creation_GuaranteedDelivery_API" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <header action="remove" name="Content-Encoding" scope="transport"/>
+            <log level="custom">
+                <property expression="json-eval($)" name="Message in MessageStore"/>
+            </log>
+            <property expression="json-eval($.routeName)" name="URL" scope="default" type="STRING"/>
+            <property expression="json-eval($)" name="Payload" scope="default" type="STRING"/>
+            <property expression="json-eval($.routeName)" name="uri.var.routeName" scope="default" type="STRING"/>
+            <property expression="json-eval($.next_run_time)" name="Next_Run_Time" scope="default" type="STRING"/>
+            <property expression="json-eval($.schedulerId)" name="schedulerId" scope="default" type="STRING"/>
+            <property expression="json-eval($.original_payload)" name="original_payload" scope="default" type="STRING"/>
+            <propertyGroup>
+                <property name="regUrl" scope="default" type="STRING" value="conf:/resources/ResourceData.xml"/>
+                <property expression="get-property('registry', $ctx:regUrl)" name="Data" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+                <property expression="$ctx:Data//Purchase_Order_Creation_URL_SAP" name="uri.var.sapURL" scope="default" type="STRING"/>
+            </propertyGroup>
+            <log>
+                <property expression="get-property('uri.var.sapURL')" name="URL"/>
+            </log>
+            <script language="js"><![CDATA[payload = mc.getPayloadJSON();
+                                delete payload.original_payload;
+					            delete payload.routeName;
+					            delete payload.next_run_time;
+					            delete payload.schedulerId;
+							    mc.setPayloadJSON(payload);]]></script>
+            <log level="custom">
+                <property expression="json-eval($)" name="S1 Order Payload sent to Endpoint"/>
+            </log>
+            <log level="custom">
+                <property expression="get-property('original_payload')" name="Original Response"/>
+            </log>
+            <property name="URL" scope="default" type="STRING" value="https://devsapapi.grandroyal-group.com/sap/opu/odata/SAP/ZOD_SDXXI0040_SRV/ReturnHeaderSet"/>
+            <sequence key="SAP_Auth_Seq"/>
+            <call description="Send Request to Users Endpoint">
+                <endpoint key="EP_Purchase_Order_Creation_SAP"/>
+            </call>
+            <property name="messageType" scope="axis2" type="STRING" value="application/json"/>
+            <property expression="json-eval($)" name="Response_Payload" scope="default" type="STRING"/>
+            <property expression="$axis2:HTTP_SC" name="HTTP_code" scope="default" type="STRING"/>
+            <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+            <dbreport>
+                <connection>
+                    <pool>
+                        <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                        <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_dms_sap_store;encrypt=true;trustServerCertificate=true;</url>
+                        <user>sa</user>
+                        <password>B!m5upp0rt</password>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql><![CDATA[INSERT INTO wso2_Messages Values (?,?,?,?,?,?,?,?)]]></sql>
+                    <parameter expression="get-property('HTTP_code')" type="VARCHAR"/>
+                    <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+                    <parameter type="VARCHAR" value="DMS_SAP"/>
+                    <parameter expression="get-property('original_payload')" type="VARCHAR"/>
+                    <parameter expression="get-property('Payload')" type="VARCHAR"/>
+                    <parameter expression="get-property('Response_Payload')" type="VARCHAR"/>
+                    <parameter expression="get-property('Next_Run_Time')" type="VARCHAR"/>
+                    <parameter expression="get-property('schedulerId')" type="VARCHAR"/>
+                </statement>
+            </dbreport>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence>
+            <property expression="get-property('HTTP_code')" name="Status" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <property expression="get-property('original_payload')" name="original_payload" scope="default" type="STRING"/>
+            <property expression="get-property('Payload')" name="Payload" scope="default" type="STRING"/>
+            <property expression="get-property('URL')" name="URL" scope="default" type="STRING"/>
+            <property expression="$ctx:ERROR_MESSAGE" name="message" scope="default" type="STRING"/>
+            <property expression="$ctx:ERROR_CODE" name="ErrorCode" scope="default" type="STRING"/>
+            <property expression="get-property('uri.var.routeName')" name="API_Name" scope="default" type="STRING"/>
+            <property expression="get-property('ERROR_MESSAGE')" name="message" scope="default" type="STRING"/>
+            <property name="API" scope="default" type="STRING" value="SAP"/>
+            <sequence key="EmailSendSeq"/>
+            <filter regex="true" source="boolean(get-property('ErrorCode'))">
+                <then>
+                    <property expression="$ctx:ERROR_MESSAGE" name="Response_Payload" scope="default" type="STRING"/>
+                    <property name="HTTP_code" scope="default" type="STRING" value="503"/>
+                    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+                    <property name="HTTP_SC" scope="axis2" type="STRING" value="503"/>
+                    <dbreport>
+                        <connection>
+                            <pool>
+                                <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                                <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_dms_sap_store;encrypt=true;trustServerCertificate=true;</url>
+                                <user>sa</user>
+                                <password>B!m5upp0rt</password>
+                            </pool>
+                        </connection>
+                        <statement>
+                            <sql><![CDATA[INSERT INTO wso2_Messages Values (?,?,?,?,?,?,?,?)]]></sql>
+                            <parameter expression="get-property('HTTP_code')" type="VARCHAR"/>
+                            <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+                            <parameter type="VARCHAR" value="DMS_SAP"/>
+                            <parameter expression="get-property('original_payload')" type="VARCHAR"/>
+                            <parameter expression="get-property('Payload')" type="VARCHAR"/>
+                            <parameter expression="get-property('Response_Payload')" type="VARCHAR"/>
+                            <parameter expression="get-property('Next_Run_Time')" type="VARCHAR"/>
+                            <parameter expression="get-property('schedulerId')" type="VARCHAR"/>
+                        </statement>
+                    </dbreport>
+                </then>
+                <else/>
+            </filter>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>

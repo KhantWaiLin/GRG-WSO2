@@ -1,0 +1,10 @@
+---
+key: "Sale_Order_Creation_GuaranteedDelivery_API-1.0.0"
+name : "Sale_Order_Creation_GuaranteedDelivery_API"
+displayName : "Sale_Order_Creation_GuaranteedDelivery_API"
+description: "Sample API"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/sale_order_creation_guaranteedDelivery"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false

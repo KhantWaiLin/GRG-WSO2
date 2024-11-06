@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="Sale_Order_Creation" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/Sale_Order_Creation.xml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Sale_Order_Creation_swagger.yaml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Sale_Order_Creation_metadata.yaml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_GuaranteedDelivery_API" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/Sale_Order_Creation_GuaranteedDelivery_API.xml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_GuaranteedDelivery_API_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Sale_Order_Creation_GuaranteedDelivery_API_swagger.yaml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_GuaranteedDelivery_API_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Sale_Order_Creation_GuaranteedDelivery_API_metadata.yaml</file>
+    </artifact>
+    <artifact name="DMS_AuthHeader_Seq_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_AuthHeader_Seq_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="DMS_CallSaleOrderAPI_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_CallSaleOrderAPI_Seq.xml</file>
+    </artifact>
+    <artifact name="DMS_CallVendorAPI_Seq_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_CallVendorAPI_Seq_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="DMS_Token_Generate_Seq_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_Token_Generate_Seq_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="EmailSendSeq_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/EmailSendSeq_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="Mapping_Sale_Order_Creation_S2_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Mapping_Sale_Order_Creation_S2_Seq.xml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_S2_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Sale_Order_Creation_S2_Seq.xml</file>
+    </artifact>
+    <artifact name="Reply_Seq_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Reply_Seq_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="SAP_Auth_Seq_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/SAP_Auth_Seq_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="StoreFailedEndpoints_DMS_SAP_S2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/StoreFailedEndpoints_DMS_SAP_S2.xml</file>
+    </artifact>
+    <artifact name="EP_Sale_Order_Creation_SAP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP_Sale_Order_Creation_SAP.xml</file>
+    </artifact>
+    <artifact name="Sale_Order_Creation_S1_GuaranteedDelivery_EP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/Sale_Order_Creation_S1_GuaranteedDelivery_EP.xml</file>
+    </artifact>
+    <artifact name="SaleOrderCreationMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/SaleOrderCreationMessageStore.xml</file>
+    </artifact>
+    <artifact name="SaleOrderCreationFailedMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/SaleOrderCreationFailedMessageStore.xml</file>
+    </artifact>
+    <artifact name="SaleOrderCreationMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/SaleOrderCreationMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="SaleOrderCreationFailedMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/SaleOrderCreationFailedMessageProcessor.xml</file>
+    </artifact>
+</artifacts>

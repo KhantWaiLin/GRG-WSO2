@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: Sale_Order_Creation_GuaranteedDelivery_API
+  description: API Definition of Sale_Order_Creation_GuaranteedDelivery_API
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/sale_order_creation_guaranteedDelivery
+paths:
+  /:
+    post:
+      responses:
+        default:
+          description: Default response
