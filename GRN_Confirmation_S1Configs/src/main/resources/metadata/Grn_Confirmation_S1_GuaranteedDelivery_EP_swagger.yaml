@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: Grn_Confirmation_S1_GuaranteedDelivery_EP
+  description: API Definition of Grn_Confirmation_S1_GuaranteedDelivery_EP
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/grn_confirmation_s1_guaranteedDelivery
+paths:
+  /:
+    post:
+      responses:
+        default:
+          description: Default response

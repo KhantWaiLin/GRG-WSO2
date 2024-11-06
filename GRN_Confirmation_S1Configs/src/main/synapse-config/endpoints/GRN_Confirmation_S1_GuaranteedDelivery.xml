@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="GRN_Confirmation_S1_GuaranteedDelivery" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="http://localhost:8290/grn_confirmation_s1_guaranteedDelivery">
+        <timeout>
+            <duration>240000</duration>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </http>
+</endpoint>

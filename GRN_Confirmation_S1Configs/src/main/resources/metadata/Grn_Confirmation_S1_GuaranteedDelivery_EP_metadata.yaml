@@ -1,0 +1,11 @@
+---
+key: "Grn_Confirmation_S1_GuaranteedDelivery_EP-1.0.0"
+name : "Grn_Confirmation_S1_GuaranteedDelivery_EP"
+displayName : "Grn_Confirmation_S1_GuaranteedDelivery_EP"
+description: "Sample API"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/grn_confirmation_s1_guaranteedDelivery"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
+apiId : "null"

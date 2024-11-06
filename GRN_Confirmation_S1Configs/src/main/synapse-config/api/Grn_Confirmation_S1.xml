@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/grn_confirmation_s1" name="Grn_Confirmation_S1" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/{time}">
+        <inSequence>
+            <property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" value="true"/>
+            <sequence key="Grn_Confirmation_Seq"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>

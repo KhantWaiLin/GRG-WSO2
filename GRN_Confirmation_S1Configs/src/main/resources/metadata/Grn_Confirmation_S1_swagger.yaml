@@ -1,0 +1,21 @@
+openapi: 3.0.1
+info:
+  title: Grn_Confirmation_S1
+  description: API Definition of Grn_Confirmation_S1
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/grn_confirmation_s1
+paths:
+  /{time}:
+    get:
+      parameters:
+      - name: time
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        default:
+          description: Default response

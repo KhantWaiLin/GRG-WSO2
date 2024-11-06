@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="Grn_Confirmation_S1" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/Grn_Confirmation_S1.xml</file>
+    </artifact>
+    <artifact name="Grn_Confirmation_S1_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Grn_Confirmation_S1_swagger.yaml</file>
+    </artifact>
+    <artifact name="Grn_Confirmation_S1_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Grn_Confirmation_S1_metadata.yaml</file>
+    </artifact>
+    <artifact name="Grn_Confirmation_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Grn_Confirmation_Seq.xml</file>
+    </artifact>
+    <artifact name="DMS_Token_Generate_Seq_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_Token_Generate_Seq_2.xml</file>
+    </artifact>
+    <artifact name="DMS_AuthHeader_Seq_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_AuthHeader_Seq_2.xml</file>
+    </artifact>
+    <artifact name="DMS_CallVendorAPI_Seq_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_CallVendorAPI_Seq_2.xml</file>
+    </artifact>
+    <artifact name="DMS_CallGRNConfirmationList_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_CallGRNConfirmationList_Seq.xml</file>
+    </artifact>
+    <artifact name="EmailSendSeq_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/EmailSendSeq_2.xml</file>
+    </artifact>
+    <artifact name="StoreFailedEndpoints_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/StoreFailedEndpoints_2.xml</file>
+    </artifact>
+    <artifact name="Mapping_GRNConfrim_S1_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Mapping_GRNConfrim_S1_Seq.xml</file>
+    </artifact>
+    <artifact name="Reply_Seq_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Reply_Seq_2.xml</file>
+    </artifact>
+    <artifact name="SAP_Auth_Seq_2" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/SAP_Auth_Seq_2.xml</file>
+    </artifact>
+    <artifact name="GrnConfirmationMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/GrnConfirmationMessageStore.xml</file>
+    </artifact>
+    <artifact name="GrnConfirmationFailedMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/GrnConfirmationFailedMessageStore.xml</file>
+    </artifact>
+    <artifact name="GRN_Confirmation_S1_GuaranteedDelivery" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/GRN_Confirmation_S1_GuaranteedDelivery.xml</file>
+    </artifact>
+    <artifact name="Grn_Confirmation_S1_GuaranteedDelivery_EP" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/Grn_Confirmation_S1_GuaranteedDelivery_EP.xml</file>
+    </artifact>
+    <artifact name="Grn_Confirmation_S1_GuaranteedDelivery_EP_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Grn_Confirmation_S1_GuaranteedDelivery_EP_swagger.yaml</file>
+    </artifact>
+    <artifact name="Grn_Confirmation_S1_GuaranteedDelivery_EP_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/Grn_Confirmation_S1_GuaranteedDelivery_EP_metadata.yaml</file>
+    </artifact>
+    <artifact name="EP_GRN_Confirmation_SAP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP_GRN_Confirmation_SAP.xml</file>
+    </artifact>
+    <artifact name="GrnConfirmationMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/GrnConfirmationMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="GrnConfirmationFailedMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/GrnConfirmationFailedMessageProcessor.xml</file>
+    </artifact>
+</artifacts>

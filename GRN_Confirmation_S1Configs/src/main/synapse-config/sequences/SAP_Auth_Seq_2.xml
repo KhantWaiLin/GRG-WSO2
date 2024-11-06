@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="SAP_Auth_Seq_2" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <header name="Content-Type" scope="transport" value="application/json"/>
+    <header expression="fn:concat('Basic ', base64Encode('GRGINF:GRGinf@123'))" name="Authorization" scope="transport"/>
+    <header name="Accept" scope="transport" value="application/json"/>
+    <header name="X-REQUESTED-WITH" scope="transport" value="X"/>
+    <header name="sap-client" scope="transport" value="300"/>
+</sequence>
