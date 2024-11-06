@@ -1,0 +1,11 @@
+---
+key: "purchase_order_creation_s1-1.0.0"
+name : "purchase_order_creation_s1"
+displayName : "purchase_order_creation_s1"
+description: "Sample API"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/purchase_order_creation_s1"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
+apiId : "null"

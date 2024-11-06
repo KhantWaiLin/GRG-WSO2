@@ -1,0 +1,11 @@
+---
+key: "purchase_order_creation_s1_guaranteedDelivery_api-1.0.0"
+name : "purchase_order_creation_s1_guaranteedDelivery_api"
+displayName : "purchase_order_creation_s1_guaranteedDelivery_api"
+description: "Sample API"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/purchase_order_creation_s1_guaranteedDelivery"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
+apiId : "null"

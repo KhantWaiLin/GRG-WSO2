@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<task class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz" name="Purchase_Order_S1_Schedule" xmlns="http://ws.apache.org/ns/synapse">
+    <trigger interval="180"/>
+    <property name="sequenceName" value="Purchase_Order_Creation_S1_Seq" xmlns:task="http://www.wso2.org/products/wso2commons/tasks"/>
+    <property name="message" xmlns:task="http://www.wso2.org/products/wso2commons/tasks">
+        <msg xmlns="">Message</msg>
+    </property>
+    <property name="injectTo" value="sequence" xmlns:task="http://www.wso2.org/products/wso2commons/tasks"/>
+</task>

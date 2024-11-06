@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="DMS_CallPurchaseOrderAPI_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <sequence key="DMS_AuthHeader_Seq"/>
+    <property expression="concat(get-property('uri.var.DMS_URL'),'/purchaseOrder/list/',get-property('uri.var.TenantId'),'/',get-property('uri.var.UserId'),'/', get-property('uri.var.CurrentTimeStamp'),'/null/null')" name="URL" scope="default" type="STRING"/>
+    <call>
+        <endpoint>
+            <http method="get" uri-template="{uri.var.DMS_URL}/purchaseOrder/list/{uri.var.TenantId}/{uri.var.UserId}/{uri.var.CurrentTimeStamp}/null/null/">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </http>
+        </endpoint>
+    </call>
+    <property expression="$axis2:HTTP_SC" name="Status" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="json-eval($)" name="DataRecords" scope="default" type="STRING"/>
+    <property expression="$ctx:ERROR_CODE" name="ErrorCode" scope="default" type="STRING"/>
+    <property name="API_Name" scope="default" type="STRING" value="CallPurchaseOrder API S1"/>
+    <property name="API" scope="default" type="STRING" value="DMS"/>
+    <filter xpath="$ctx:Status != 200">
+        <then>
+            <property expression="get-property('ERROR_MESSAGE')" name="message" scope="default" type="STRING"/>
+            <sequence key="EmailSendSeq"/>
+            <sequence key="StoreFailedEndpoints"/>
+        </then>
+        <else/>
+    </filter>
+    <log level="custom">
+        <property expression="$ctx:Status" name="PurchaseOrder_API_Response_Code"/>
+    </log>
+</sequence>

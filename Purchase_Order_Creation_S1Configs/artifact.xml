@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="purchase_order_creation_s1" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/purchase_order_creation_s1.xml</file>
+    </artifact>
+    <artifact name="purchase_order_creation_s1_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/purchase_order_creation_s1_swagger.yaml</file>
+    </artifact>
+    <artifact name="purchase_order_creation_s1_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/purchase_order_creation_s1_metadata.yaml</file>
+    </artifact>
+    <artifact name="Purchase_Order_Creation_S1_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Purchase_Order_Creation_S1_Seq.xml</file>
+    </artifact>
+    <artifact name="DMS_CallVendorAPI_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_CallVendorAPI_Seq.xml</file>
+    </artifact>
+    <artifact name="DMS_AuthHeader_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_AuthHeader_Seq.xml</file>
+    </artifact>
+    <artifact name="DMS_Token_Generate_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_Token_Generate_Seq.xml</file>
+    </artifact>
+    <artifact name="Mapping_Purchase_Order_Creation_S1_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Mapping_Purchase_Order_Creation_S1_Seq.xml</file>
+    </artifact>
+    <artifact name="DMS_CallPurchaseOrderAPI_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_CallPurchaseOrderAPI_Seq.xml</file>
+    </artifact>
+    <artifact name="EmailSendSeq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/EmailSendSeq.xml</file>
+    </artifact>
+    <artifact name="StoreFailedEndpoints" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/StoreFailedEndpoints.xml</file>
+    </artifact>
+    <artifact name="PurchaseOrderCreationMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/PurchaseOrderCreationMessageStore.xml</file>
+    </artifact>
+    <artifact name="PurchaseOrderCreationFailedMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/PurchaseOrderCreationFailedMessageStore.xml</file>
+    </artifact>
+    <artifact name="PurchaseOrderCreationMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/PurchaseOrderCreationMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="purchase_order_creation_s1_guaranteedDelivery_api" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/purchase_order_creation_s1_guaranteedDelivery_api.xml</file>
+    </artifact>
+    <artifact name="purchase_order_creation_s1_guaranteedDelivery_api_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/purchase_order_creation_s1_guaranteedDelivery_api_swagger.yaml</file>
+    </artifact>
+    <artifact name="purchase_order_creation_s1_guaranteedDelivery_api_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/purchase_order_creation_s1_guaranteedDelivery_api_metadata.yaml</file>
+    </artifact>
+    <artifact name="EP_Purchase_Order_Creation_SAP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/EP_Purchase_Order_Creation_SAP.xml</file>
+    </artifact>
+    <artifact name="SAP_Auth_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/SAP_Auth_Seq.xml</file>
+    </artifact>
+    <artifact name="purchase_order_creation_s1_GuaranteedDelivery_EP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/purchase_order_creation_s1_GuaranteedDelivery_EP.xml</file>
+    </artifact>
+    <artifact name="PurchaseOrderCreationFailedMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/PurchaseOrderCreationFailedMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="Reply_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Reply_Seq.xml</file>
+    </artifact>
+    <artifact name="Purchase_Order_S1_Schedule" groupId="com.example.task" version="1.0.0" type="synapse/task" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/tasks/Purchase_Order_S1_Schedule.xml</file>
+    </artifact>
+</artifacts>

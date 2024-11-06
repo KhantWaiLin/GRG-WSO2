@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="purchase_order_creation_s1_GuaranteedDelivery_EP" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="http://localhost:8290/purchase_order_creation_s1_guaranteedDelivery">
+        <timeout>
+            <duration>240000</duration>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </http>
+</endpoint>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="EP_Purchase_Order_Creation_SAP" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="https://grgsapdev.grandroyal-group.com/sap/opu/odata/SAP/ZOD_SDXXI0010_SRV/SoHeaderSet">
+        <timeout>
+            <duration>60000</duration>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </http>
+</endpoint>

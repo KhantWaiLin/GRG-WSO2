@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="Purchase_Order_Creation_S1_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="regUrl" scope="default" type="STRING" value="conf:/resources/ResourceData.xml"/>
+        <property expression="get-property('registry', $ctx:regUrl)" name="Data" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="$ctx:Data//ProductList" name="ProductList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//BranchList" name="BranchList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//FacilityList" name="FacilityList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//TenantIds" name="TenantIds" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//Distributors" name="Distributors" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//GRG_Branches" name="GRG_Branches" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//S1_Run_Time_Interval" name="S1_Run_Time_Interval" scope="default" type="STRING"/>
+    </propertyGroup>
+    <script language="js"><![CDATA[var time = mc.getProperty('uri.var.time');
+    		var min = 0;
+		    if(time != null){
+		    	min = min + time;
+		    }
+		    else{
+		    	min = min + mc.getProperty('S1_Run_Time_Interval');
+		    }
+    		var date = Date.parse(new Date(new Date() - min * 60000).toString());
+			var currentTimestamp = date;
+			var todayDate = new Date();
+         	var next_run_time = new Date(todayDate.getTime() + min * 60000);
+         	mc.setProperty('next_run_time',next_run_time.toLocaleString());
+			mc.setProperty('uri.var.CurrentTimeStamp',currentTimestamp.toPrecision());]]></script>
+    <log level="custom">
+        <property expression="get-property('uri.var.CurrentTimeStamp')" name="Current Time"/>
+    </log>
+    <sequence key="DMS_CallVendorAPI_Seq"/>
+    <switch source="get-property('Status')">
+        <case regex="401">
+            <log level="custom">
+                <property name="switch Log" value="401 case"/>
+            </log>
+            <sequence key="DMS_Token_Generate_Seq"/>
+        </case>
+        <case regex="403">
+            <log level="custom">
+                <property name="switch Log" value="403 case"/>
+            </log>
+            <sequence key="DMS_Token_Generate_Seq"/>
+        </case>
+        <default>
+            <log level="custom">
+                <property name="switch Log" value="Not Expired case"/>
+            </log>
+        </default>
+    </switch>
+    <payloadFactory media-type="json">
+        <format>$1</format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:Distributors"/>
+        </args>
+    </payloadFactory>
+    <iterate expression="json-eval($.Tenant)" sequential="true">
+        <target>
+            <sequence>
+                <property expression="json-eval($.TenantId)" name="uri.var.TenantId" scope="default" type="STRING"/>
+                <property expression="json-eval($.UserID)" name="uri.var.UserId" scope="default" type="STRING"/>
+                <sequence key="Mapping_Purchase_Order_Creation_S1_Seq"/>
+            </sequence>
+        </target>
+    </iterate>
+</sequence>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="StoreFailedEndpoints" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <log level="custom">
+        <property expression="$ctx:URL" name="Endpoint Name"/>
+    </log>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+    <dbreport>
+        <connection>
+            <pool>
+                <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_message_store;encrypt=true;trustServerCertificate=true;</url>
+                <user>sa</user>
+                <password>B!m5upp0rt</password>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO failedEndpoints Values (?,?,?,?,?,?,?)]]></sql>
+            <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+            <parameter expression="get-property('Status')" type="VARCHAR"/>
+            <parameter expression="get-property('URL')" type="VARCHAR"/>
+            <parameter expression="get-property('Name')" type="VARCHAR"/>
+            <parameter expression="get-property('uri.var.TenantId')" type="VARCHAR"/>
+            <parameter expression="get-property('uri.var.UserId')" type="VARCHAR"/>
+            <parameter expression="get-property('uri.var.CurrentTimeStamp')" type="VARCHAR"/>
+        </statement>
+    </dbreport>
+</sequence>
