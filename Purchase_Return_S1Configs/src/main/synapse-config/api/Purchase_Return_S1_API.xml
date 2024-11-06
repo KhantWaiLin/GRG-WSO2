@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/purchase_return_s1" name="Purchase_Return_S1_API" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/{time}">
+        <inSequence>
+            <property name="FORCE_SC_ACCEPTED" scope="axis2" type="STRING" value="true"/>
+            <sequence key="Purchase_Return_S1_Seq"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>

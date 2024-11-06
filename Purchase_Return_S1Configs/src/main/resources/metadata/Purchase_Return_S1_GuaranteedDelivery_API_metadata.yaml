@@ -1,0 +1,11 @@
+---
+key: "Purchase_Return_S1_GuaranteedDelivery_API-1.0.0"
+name : "Purchase_Return_S1_GuaranteedDelivery_API"
+displayName : "Purchase_Return_S1_GuaranteedDelivery_API"
+description: "Sample API"
+version: "1.0.0"
+serviceUrl: "https://{MI_HOST}:{MI_PORT}/purchase_return_s1_guaranteedDelivery"
+definitionType: "OAS3"
+securityType: "BASIC"
+mutualSSLEnabled: false
+apiId : "null"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="EP_Pruchase_Return_SAP" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="https://devsapapi.grandroyal-group.com/sap/opu/odata/SAP/ZOD_SDXXI0040_SRV/ReturnHeaderSet">
+        <timeout>
+            <duration>60000</duration>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </http>
+</endpoint>

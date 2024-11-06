@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="Mapping_Purchase_Return_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <property name="Name" scope="default" type="STRING" value="Generate_Credit_Order_All"/>
+    <property expression="concat(get-property('uri.var.DMS_URL'),'/customerInvoice/list/',get-property('uri.var.TenantId'),'/',get-property('uri.var.UserId'),'/',get-property('uri.var.CurrentTimeStamp'),'/null/null/')" name="URL" scope="default" type="STRING"/>
+    <property expression="fn:substring-after(get-property('MessageID'), 'urn:uuid:')" name="Message_ID" scope="default" type="STRING"/>
+    <log level="custom">
+        <property expression="get-property('Message_ID')" name="Message ID"/>
+    </log>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+    <dbreport>
+        <connection>
+            <pool>
+                <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_dms_sap_store;encrypt=true;trustServerCertificate=true;</url>
+                <user>sa</user>
+                <password>B!m5upp0rt</password>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO wso2_Scheduler_RunTime Values (?,?,?,?,?,?,?)]]></sql>
+            <parameter expression="get-property('Message_ID')" type="VARCHAR"/>
+            <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="DMS_SAP"/>
+            <parameter expression="get-property('URL')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="Purchase Return S1"/>
+            <parameter expression="get-property('uri.var.TenantId')" type="VARCHAR"/>
+            <parameter expression="get-property('next_run_time')" type="VARCHAR"/>
+        </statement>
+    </dbreport>
+    <sequence key="DMS_CallCustomerInvoiceAPI_Seq"/>
+    <log level="custom">
+        <property expression="get-property('URL')" name="URL_Route"/>
+        <property expression="$ctx:DataRecords" name="Purchase_Return_List"/>
+    </log>
+    <switch source="get-property('Status')">
+        <case regex="401">
+            <log level="custom">
+                <property name="switch Log" value="401 case"/>
+            </log>
+            <sequence key="DMS_Token_Generate_Seq_3"/>
+            <sequence key="DMS_CallCustomerInvoiceAPI_Seq"/>
+        </case>
+        <case regex="403">
+            <log level="custom">
+                <property name="switch Log" value="403 case"/>
+            </log>
+            <sequence key="DMS_Token_Generate_Seq_3"/>
+            <sequence key="DMS_CallCustomerInvoiceAPI_Seq"/>
+        </case>
+        <default>
+            <log level="custom">
+                <property name="switch Log" value="Not Expired case"/>
+            </log>
+        </default>
+    </switch>
+    <payloadFactory media-type="json">
+        <format>
+			$1
+		</format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:DataRecords"/>
+        </args>
+    </payloadFactory>
+    <iterate expression="json-eval($.Invoice)" id="jsonIterator">
+        <target>
+            <sequence>
+                <propertyGroup>
+                    <property expression="json-eval($.TemplateId)" name="TemplateId" scope="default" type="STRING"/>
+                </propertyGroup>
+                <filter regex="INFY_DEFAULT_VENDOR_RETURNS_DEBIT_NOTE_TEMPLATE" source="get-property('TemplateId')">
+                    <then>
+                        <property expression="json-eval($.Comment)" name="Comment" scope="default" type="STRING"/>
+                        <property expression="json-eval($.POOfflineNumber)" name="POOfflineNumber" scope="default" type="STRING"/>
+                        <property expression="json-eval($.InvoiceId)" name="InvoiceId" scope="default" type="STRING"/>
+                        <script language="js"><![CDATA[payload = mc.getPayloadJSON();
+                                            				var orderItems = payload.Items.Item;
+                                                    		var order = new Object();
+	                                 						order.routeName='Generate_Credit_Order_All';
+	                                 						order.next_run_time= mc.getProperty('next_run_time');
+	                                 						order.schedulerId = mc.getProperty('Message_ID');
+						                					order.CustomerRefHeader = mc.getProperty('POOfflineNumber').toString().trim();
+						                					order.POComments = mc.getProperty("Comment").toString().trim();
+						                					order.ReturnItem = new Array;
+						                					order.original_payload = {PurchaseReturn: payload}
+						                					if(Array.isArray(orderItems)){
+							                					for(j = 0; j < orderItems.length; j++){
+								                                 	data_row=orderItems[j];
+								                                 	orderItem = new Object();
+								                                 	orderItem.ReturnQuantity = data_row.Qty;
+								                                 	orderItem.BatchNumber = data_row.BatchId;
+								                                 	orderItem.MaterialNumber = data_row.ProductCode;
+								                                 	order.ReturnItem[j] = orderItem;
+								                                 	orderItem.CustomerRefHeader = mc.getProperty('Comment').toString().trim();
+								                                }
+								                            }
+								                            else{
+								                            	data_row=orderItems;
+								                            	orderItem = new Object();
+								                                orderItem.ReturnQuantity = data_row.Qty;
+								                                orderItem.BatchNumber = data_row.BatchId;
+								                                orderItem.MaterialNumber = data_row.ProductCode;
+								                                order.ReturnItem[0] = orderItem;
+								                                orderItem.CustomerRefHeader = mc.getProperty('Comment').toString().trim();
+								                            }
+								                            order.DMSReference = mc.getProperty('InvoiceId');
+                                                            order.ReturnMessage = new Array();
+							                                mc.setPayloadJSON(order);]]></script>
+                        <store description="JDBC message store" messageStore="PurchaseReturnMessageStore"/>
+                        <log level="custom">
+                            <property expression="json-eval($)" name="Message to sotre"/>
+                        </log>
+                    </then>
+                    <else/>
+                </filter>
+            </sequence>
+        </target>
+    </iterate>
+</sequence>
