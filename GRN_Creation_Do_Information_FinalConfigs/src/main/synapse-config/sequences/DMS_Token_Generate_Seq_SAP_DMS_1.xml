@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="DMS_Token_Generate_Seq_SAP_DMS_1" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property expression="$ctx:Data//DMS_Token_URL" name="uri.var.DMS_Token_URL" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//DMS_AuthToken" name="uri.var.DMS_AuthToken" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//scope" name="scope" scope="default" type="STRING"/>
+    </propertyGroup>
+    <property name="grant_type" scope="default" type="STRING" value="client_credentials"/>
+    <property expression="get-property('scope')" name="scope" scope="default" type="STRING"/>
+    <payloadFactory media-type="json">
+        <format>
+                	{
+                		"grant_type": "$1",
+                		"scope": "$2"
+                	}
+				</format>
+        <args>
+            <arg evaluator="xml" expression="$ctx:grant_type" xmlns:ns="http://org.apache.synapse/xsd"/>
+            <arg evaluator="xml" expression="$ctx:scope" xmlns:ns="http://org.apache.synapse/xsd"/>
+        </args>
+    </payloadFactory>
+    <header expression="get-property('uri.var.DMS_AuthToken')" name="Authorization" scope="transport"/>
+    <header name="Content-Type" scope="transport" value="application/x-www-form-urlencoded"/>
+    <header name="Accept" scope="transport" value="application/json"/>
+    <property name="messageType" scope="axis2" type="STRING" value="application/x-www-form-urlencoded"/>
+    <log level="custom">
+        <property expression="get-property('uri.var.DMS_Token_URL')" name="URL"/>
+        <property expression="get-property('uri.var.DMS_AuthToken')" name="token"/>
+    </log>
+    <call>
+        <endpoint>
+            <http method="post" uri-template="{uri.var.DMS_Token_URL}">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </http>
+        </endpoint>
+    </call>
+    <property expression="json-eval($.access_token)" name="newToken" scope="default" type="STRING"/>
+    <log level="custom">
+        <property expression="get-property('newToken')" name="New Access Token"/>
+    </log>
+    <enrich>
+        <source clone="false" xpath="$ctx:newToken"/>
+        <target xpath="$ctx:Data//DMS_Access_Token"/>
+    </enrich>
+    <script language="js"><![CDATA[var regUrl = mc.getProperty('regUrl');
+		                mc.getConfiguration().getRegistry().updateResource(regUrl, mc.getProperty('Data'));
+		                var regEntry = mc.getConfiguration().getRegistry().getRegistryEntry(regUrl);
+		                regEntry.setCachableDuration(0);
+		                mc.getConfiguration().getRegistry().updateRegistryEntry(regEntry);]]></script>
+    <enrich>
+        <source clone="true" property="Data" type="property"/>
+        <target type="body"/>
+    </enrich>
+</sequence>

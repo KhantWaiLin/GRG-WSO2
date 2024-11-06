@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="GRN_Creation_GuaranteedDelivery" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/GRN_Creation_GuaranteedDelivery.xml</file>
+    </artifact>
+    <artifact name="GRN_Creation_GuaranteedDelivery_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/GRN_Creation_GuaranteedDelivery_swagger.yaml</file>
+    </artifact>
+    <artifact name="GRN_Creation_GuaranteedDelivery_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/GRN_Creation_GuaranteedDelivery_metadata.yaml</file>
+    </artifact>
+    <artifact name="GRN_Creation" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/GRN_Creation.xml</file>
+    </artifact>
+    <artifact name="GRN_Creation_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/GRN_Creation_swagger.yaml</file>
+    </artifact>
+    <artifact name="GRN_Creation_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/GRN_Creation_metadata.yaml</file>
+    </artifact>
+    <artifact name="GRN_Creation_GuaranteedDelivery_EP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/GRN_Creation_GuaranteedDelivery_EP.xml</file>
+    </artifact>
+    <artifact name="GrnCreationFailedMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/GrnCreationFailedMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="GrnCreationFailedMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/GrnCreationFailedMessageStore.xml</file>
+    </artifact>
+    <artifact name="GrnCreationMessageProcessor" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/GrnCreationMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="DMS_AuthHeader_Seq_SAP_DMS_1" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_AuthHeader_Seq_SAP_DMS_1.xml</file>
+    </artifact>
+    <artifact name="DMS_Token_Generate_Seq_SAP_DMS_1" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/DMS_Token_Generate_Seq_SAP_DMS_1.xml</file>
+    </artifact>
+    <artifact name="EmailSendSeq_SAP_DMS_1" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/EmailSendSeq_SAP_DMS_1.xml</file>
+    </artifact>
+    <artifact name="Grn_Creation_Seq" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Grn_Creation_Seq.xml</file>
+    </artifact>
+    <artifact name="Reply_Seq_SAP_DMS_1" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/Reply_Seq_SAP_DMS_1.xml</file>
+    </artifact>
+    <artifact name="SAP_Auth_Seq_SAP_DMS_1" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/SAP_Auth_Seq_SAP_DMS_1.xml</file>
+    </artifact>
+    <artifact name="GrnCreationMessageProcessor" groupId="com.example.message-processors" version="1.0.0" type="synapse/message-processors" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-processors/GrnCreationMessageProcessor.xml</file>
+    </artifact>
+    <artifact name="GrnCreationMessageStore" groupId="com.example.message-store" version="1.0.0" type="synapse/message-store" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/message-stores/GrnCreationMessageStore.xml</file>
+    </artifact>
+    <artifact name="GRN_Create_Update" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/GRN_Create_Update.xml</file>
+    </artifact>
+</artifacts>

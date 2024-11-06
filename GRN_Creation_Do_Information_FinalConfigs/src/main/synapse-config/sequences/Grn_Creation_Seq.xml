@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="Grn_Creation_Seq" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="regUrl" scope="default" type="STRING" value="conf:/resources/ResourceData.xml"/>
+        <property expression="get-property('registry', $ctx:regUrl)" name="Data" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="$ctx:Data//ProductList" name="ProductList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//FacilityList" name="FacilityList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//BranchList" name="BranchList" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//facility_id" name="facility_id" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//vendorId" name="vendorId" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//GRN_Create_Run_Time_Interval" name="GRN_Create_Run_Time_Interval" scope="default" type="STRING"/>
+    </propertyGroup>
+    <script language="js"><![CDATA[var min = mc.getProperty('GRN_Create_Run_Time_Interval');
+			var todayDate = new Date();
+         	var next_run_time = new Date(todayDate.getTime() + min * 60000);
+         	mc.setProperty('next_run_time',next_run_time.toLocaleString());]]></script>
+    <property expression="concat(get-property('uri.var.jdeURL'),'/ORCH_GRNCreationInformation')" name="URL" scope="default" type="STRING"/>
+    <property expression="fn:substring-after(get-property('MessageID'), 'urn:uuid:')" name="Message_ID" scope="default" type="STRING"/>
+    <log level="custom">
+        <property expression="get-property('Message_ID')" name="Message ID"/>
+    </log>
+    <property expression="get-property(&quot;SYSTEM_DATE&quot;, &quot;yyyy-MM-dd'T'HH:mm:ss&quot;)" name="currentDate" scope="default" type="STRING"/>
+    <dbreport>
+        <connection>
+            <pool>
+                <driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
+                <url>jdbc:sqlserver://localhost:1433;databaseName=wso2_dms_sap_store;encrypt=true;trustServerCertificate=true;</url>
+                <user>sa</user>
+                <password>B!m5upp0rt</password>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[INSERT INTO wso2_Scheduler_RunTime Values (?,?,?,?,?,?,?)]]></sql>
+            <parameter expression="get-property('Message_ID')" type="VARCHAR"/>
+            <parameter expression="get-property('currentDate')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="SAP_DMS"/>
+            <parameter expression="get-property('URL')" type="VARCHAR"/>
+            <parameter type="VARCHAR" value="GRNCreateUpdate"/>
+            <parameter type="VARCHAR" value="-"/>
+            <parameter expression="get-property('next_run_time')" type="VARCHAR"/>
+        </statement>
+    </dbreport>
+    <payloadFactory media-type="json">
+        <format>{}</format>
+        <args/>
+    </payloadFactory>
+    <sequence key="SAP_Auth_Seq_SAP_DMS_1"/>
+    <call>
+        <endpoint>
+            <http method="get" uri-template="https://devsapapi.grandroyal-group.com/sap/opu/odata/SAP/ZOD_SDXXI0020_SRV/Do_InformationSet">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>-1</progressionFactor>
+                    <maximumDuration>0</maximumDuration>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </http>
+        </endpoint>
+    </call>
+    <property name="API_Name" scope="default" type="STRING" value="ORCH_GRNCreationInformation API"/>
+    <property name="API" scope="default" type="STRING" value="JDE"/>
+    <property expression="$axis2:HTTP_SC" name="Status" scope="default" type="STRING" xmlns:ns="http://org.apache.synapse/xsd"/>
+    <property expression="$ctx:ERROR_CODE" name="ErrorCode" scope="default" type="STRING"/>
+    <filter xpath="$ctx:Status != 200">
+        <then>
+            <property expression="get-property('ERROR_MESSAGE')" name="message" scope="default" type="STRING"/>
+            <sequence key="EmailSeq"/>
+        </then>
+        <else/>
+    </filter>
+    <log level="custom">
+        <property expression="get-property('URL')" name="URL_Route"/>
+        <property expression="json-eval($)" name="GRNCreationInformation_Response"/>
+    </log>
+    <iterate expression="json-eval($.d.results)" sequential="true">
+        <target>
+            <sequence>
+                <script language="js"><![CDATA[payload = mc.getPayloadJSON();
+				function FormatDate(dateString) {
+				var timestamp = parseInt(
+					dateString.replace("/Date(", "").replace(")/", ""),
+					10
+				);
+
+				var date = new Date(timestamp);
+
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+
+				var monthStr = month < 10 ? "0" + month : "" + month;
+				var dayStr = day < 10 ? "0" + day : "" + day;
+
+				return year + "-" + monthStr + "-" + dayStr;
+				}
+
+				var log = mc.getServiceLog();
+				var mainObject = new Object();
+				mainObject.routeName = "GRNCreateUpdate";
+				mainObject.next_run_time = mc.getProperty("next_run_time");
+				mainObject.schedulerId = mc.getProperty("Message_ID");
+				mainObject.original_payload = payload;
+
+				mainObject.GRNs = new Object();
+				mainObject.GRNs.GRN = new Object();
+
+				BranchList = mc.getProperty("BranchList");
+				BranchList = JSON.parse(BranchList);
+				BranchList = BranchList.Branch;
+				branchCode_tenantId = payload.CustomerNumber01.toString().trim();
+				branchCode_userId = payload.CustomerNumber02.toString().trim();
+				tenantId = "";
+				userId = "";
+				vendorId = mc.getProperty("vendorId");
+				BranchList.forEach(function (value, index, array) {
+				if (value.Branch_code == branchCode_tenantId) {
+					tenantId = value.TenantId;
+				}
+				if (value.Branch_code == branchCode_userId) {
+					userId = value.UserID;
+				}
+				});
+
+				mainObject.GRNs.GRN.TenantId = tenantId;
+				mainObject.GRNs.GRN.userLoginId = userId;
+				mainObject.GRNs.GRN.DeliveryNoteInvoiceASN = "";
+				mainObject.GRNs.GRN.GRNTypeId = "INCOMING_SHIPMENT";
+
+				FacilityList = mc.getProperty("FacilityList");
+				FacilityList = JSON.parse(FacilityList);
+				FacilityList = FacilityList.Facility;
+				facilityCode = payload.CustomerNumber03.toString().trim();
+				facilityId = "";
+				FacilityList.forEach(function (value, index, array) {
+				if (value.branch_code == facilityCode) {
+					facilityId = value.facility_id;
+				}
+				});
+
+				mainObject.GRNs.GRN.FacilityId = facilityId;
+				mainObject.GRNs.GRN.GRNNumber =
+				payload.DeliveryNumber +
+				"_" +
+				payload.CustomerRefItem01 +
+				"_" +
+				payload.DoEntryTime;
+				mainObject.GRNs.GRN.items = new Object();
+				mainObject.GRNs.GRN.items.OrderItem = new Array();
+
+				orderItem = new Object();
+				orderItem.BatchNumber = payload.BatchNumber;
+				orderItem.BatchQtyReceived = payload.DeliveredQuantity;
+				orderItem.ExpiryDate = FormatDate(payload.ExpirationDate);
+				orderItem.MfgDate = FormatDate(payload.ManufactureDate);
+				orderItem.orderQty = payload.SalesQuantity;
+				if (payload.Uom01 == "BT") {
+				orderItem.orderedUom = "INF_PROD_BOTTLE";
+				} else if (payload.Uom01 == "CA") {
+				orderItem.orderedUom = "INF_PROD_CAS";
+				}
+				if (payload.Uom02 == "BT") {
+				orderItem.uomId = "INF_PROD_BOTTLE";
+				} else if (payload.Uom02 == "CA") {
+				orderItem.uomId = "INF_PROD_CAS";
+				}
+
+				productList = mc.getProperty("ProductList");
+				productList = JSON.parse(productList);
+				productList = productList.Product;
+				productCode = payload.MaterialNumber;
+				productId = "";
+				productList.forEach(function (value, index, array) {
+				if (value.productCode == productCode) {
+					productId = value.productId;
+				}
+				});
+
+				orderItem.productId = productId;
+
+				orderItem.TaxApplied = "0.00";
+				orderItem.LandingCost = payload.UnitPrice01;
+				orderItem.Mrp = payload.UnitPrice02;
+				orderItem.price = payload.NetPrice;
+				orderItem.reasonCode = "";
+
+				mainObject.GRNs.GRN.items.OrderItem[0] = orderItem;
+
+				mainObject.GRNs.GRN.PONumber = payload.CustomerRefItem02;
+				mainObject.GRNs.GRN.ReceivedDate = FormatDate(payload.ActualPGIDate);
+				mainObject.GRNs.GRN.ReceiverName = "";
+				mainObject.GRNs.GRN.Status = "GRN_SUBMITTED";
+				mainObject.GRNs.GRN.ConfirmDate = "";
+
+				mainObject.GRNs.GRN.VendorId = vendorId;
+				mainObject.GRNs.GRN.GRNAttribute1 = payload.SalesOrderNumber;
+				mainObject.GRNs.GRN.GRNAttribute2 = payload.DeliveryItem;
+				mainObject.GRNs.GRN.GRNAttribute3 = "";
+				mainObject.GRNs.GRN.GRNAttribute4 = "";
+				mainObject.GRNs.GRN.isSavedFromKB = "false";
+
+				mc.setPayloadJSON(mainObject);]]></script>
+                <filter regex=".+" source="get-property('ERROR_MAPPING')">
+                    <then>
+                        <log level="custom">
+                            <property expression="get-property('ERROR_MAPPING')" name="JavaScriptError"/>
+                        </log>
+                    </then>
+                    <else>
+                        <log level="custom">
+                            <property expression="json-eval($)" name="Message Will store"/>
+                        </log>
+                        <store messageStore="GrnCreationMessageStore"/>
+                        <log level="custom">
+                            <property expression="json-eval($)" name="Message To store"/>
+                        </log>
+                    </else>
+                </filter>
+            </sequence>
+        </target>
+    </iterate>
+</sequence>

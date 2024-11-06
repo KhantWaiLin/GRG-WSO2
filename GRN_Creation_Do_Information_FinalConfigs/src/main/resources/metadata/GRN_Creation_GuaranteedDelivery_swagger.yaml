@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: GRN_Creation_GuaranteedDelivery
+  description: API Definition of GRN_Creation_GuaranteedDelivery
+  version: 1.0.0
+servers:
+- url: http://localhost:8290/grn_creation_guaranteedDelivery
+paths:
+  /:
+    post:
+      responses:
+        default:
+          description: Default response
