@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="DMS_AuthHeader_Seq_SAP_DMS_2" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <propertyGroup>
+        <property name="regUrl" scope="default" type="STRING" value="conf:/resources/ResourceData.xml"/>
+        <property expression="get-property('registry', $ctx:regUrl)" name="Data" scope="default" type="OM" xmlns:ns="http://org.apache.synapse/xsd"/>
+        <property expression="$ctx:Data//DMS_URL" name="uri.var.DMS_URL" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//DMS_Access_Token" name="DMS_Access_Token" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//DMS_UserId" name="uri.var.DMS_UserId" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//DMS_TenantId" name="uri.var.DMS_TenantId" scope="default" type="STRING"/>
+        <property expression="$ctx:Data//WSO2_Key" name="WSO2_Key" scope="default" type="STRING"/>
+    </propertyGroup>
+    <header expression="get-property('uri.var.DMS_UserId')" name="userid" scope="transport"/>
+    <header expression="get-property('uri.var.DMS_TenantId')" name="tenantId" scope="transport"/>
+    <header name="Content-Type" scope="transport" value="application/soap+xml"/>
+    <header name="is_api" scope="transport" value="true"/>
+    <header name="Accept" scope="transport" value="application/xml"/>
+    <header expression="concat('Bearer ', get-property('DMS_Access_Token'))" name="Authorization" scope="transport"/>
+</sequence>

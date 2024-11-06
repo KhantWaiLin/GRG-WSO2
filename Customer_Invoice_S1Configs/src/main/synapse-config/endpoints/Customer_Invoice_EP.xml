@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoint name="Customer_Invoice_EP" xmlns="http://ws.apache.org/ns/synapse">
+    <http method="post" uri-template="https://distributoredge.tradeedge.net/dmsstage/grgstgapi/te-invoice/Customservice/Invoice/Createandupdateinvoices">
+        <timeout>
+            <duration>60000</duration>
+        </timeout>
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </http>
+</endpoint>

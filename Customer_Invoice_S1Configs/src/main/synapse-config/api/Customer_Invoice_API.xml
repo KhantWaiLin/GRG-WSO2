@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/customer_invoice" name="Customer_Invoice_API" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET">
+        <inSequence>
+            <property expression="get-property('query.param.$filter')" name="filter" scope="default" type="STRING"/>
+            <sequence key="Customer_Invoice_Seq"/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
